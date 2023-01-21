@@ -1,0 +1,16 @@
+#!/bin/sh
+SCRIPTPATH=$(dirname "$(readlink -f "$0")")
+if [ "$#" -ne 1 ]; then
+  echo "Requires one argument: problem number"
+  exit 1
+fi
+EULERPATH="$SCRIPTPATH"/../../euler
+cd "$EULERPATH" || exit 1
+DIR=$(python3 "$EULERPATH"/templates/euler.py "$1")
+cd "$DIR" || exit 1
+if [ ! -e "$1".cpp ]; then
+  cp "$EULERPATH"/templates/euler.cpp "$1".cpp
+fi
+xdg-open https://projecteuler.net/problem="$1"
+
+echo "cd $(echo "$EULERPATH"/"$DIR" | sed 's/ /\\ /g')"

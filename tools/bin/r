@@ -1,0 +1,20 @@
+#!/bin/sh
+SCRIPTPATH=$(dirname "$(readlink -f "$0")")
+if [ "$#" -lt 1 ]; then
+  echo "Requires at least one argument: source code file (without .cpp)"
+  exit 1
+fi
+N="$(readlink -f "$1")"; shift
+
+cd "$SCRIPTPATH"/../.. || exit 1
+N=$(realpath --relative-to="$PWD" "$N")
+N_DIR=$(dirname "$N")
+make -s bin/"$N".o || exit 0
+
+if test ${#} -eq 0; then
+  ./bin/"$N".o
+else
+  while test ${#} -gt 0; do
+    ./bin/"$N".o < "$N_DIR"/"$1".txt; shift
+  done
+fi
