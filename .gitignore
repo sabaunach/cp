@@ -5,3 +5,4 @@ venv/
 *.exe
 *.out
 *.app
+.idea/

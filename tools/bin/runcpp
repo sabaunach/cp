@@ -1,0 +1,2 @@
+#!/bin/sh
+g++ --std=c++2a "$(basename "$1")".cpp && ./a.out < "$(basename "$2")".in

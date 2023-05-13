@@ -1,0 +1,8 @@
+#!/bin/sh
+SCRIPTPATH=$(dirname "$(readlink -f "$0")")
+if [ "$#" -ne 1 ]; then
+  echo "Requires one argument: problem name"
+  exit 1
+fi
+KATTISPATH="$SCRIPTPATH"/../../kattis
+cp "$KATTISPATH"/templates/template.cpp ./"$1".cpp

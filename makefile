@@ -16,11 +16,13 @@ bin/usaco/%.o: usaco/%.cpp
 
 bin/euler/%.o: euler/%.cpp
 	mkdir -p $(dir $@)
-	g++ --std=gnu++17 $^ -o $@
+	g++ -std=c++20 $^ -o $@
 
 bin/practice/%.o: practice/%.cpp
 	mkdir -p $(dir $@)
 	g++ --std=gnu++17 $^ -o $@
+
+# all: bin/cf/%.o bin/kattis/%.o bin/ac/%.o bin/usaco/%.o bin/euler/%.o bin/practice/%.o
 
 clean:
 	rm -rf bin/*

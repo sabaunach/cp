@@ -1,20 +1,42 @@
-#!/bin/sh
+#!/bin/bash
 SCRIPTPATH=$(dirname "$(readlink -f "$0")")
 if [ "$#" -lt 1 ]; then
-  echo "Requires at least one argument: source code file (without .cpp)"
+  echo "Requires at least one argument: source code file"
   exit 1
 fi
-N="$(readlink -f "$1")"; shift
+SOURCE="$(readlink -f "$1")"; shift
 
-cd "$SCRIPTPATH"/../.. || exit 1
-N=$(realpath --relative-to="$PWD" "$N")
-N_DIR=$(dirname "$N")
-make -s bin/"$N".o || exit 0
+if [[ "$SOURCE" == *.cpp ]]; then
+  R=$(realpath "$SCRIPTPATH"/../..)
+  N=$(realpath --relative-to="$R" "$SOURCE")
+  N=$(echo "$N" | cut -f 1 -d '.')
+  N_DIR=$(dirname "$N")
+  cd "$R" || exit 1
+  make -s ./bin/"$N".o || exit 0
+  cd "$N_DIR" || exit 1
 
-if test ${#} -eq 0; then
-  ./bin/"$N".o
-else
+  if test ${#} -eq 0; then
+    "$R"/bin/"$N".o
+  else
+    while test ${#} -gt 0; do
+      T=$1
+      if test -f "$T".in; then T="$T".in
+      elif test -f "$T".txt; then T="$T".txt
+      fi
+      echo "$T"
+      "$R"/bin/"$N".o < "$T"; shift
+    done
+  fi
+elif [[ "$SOURCE" == *.py ]]; then
   while test ${#} -gt 0; do
-    ./bin/"$N".o < "$N_DIR"/"$1".txt; shift
+    T=$1
+    if test -f "$T".in; then T="$1".in
+    elif test -f "$T".txt; then T="$1".txt
+    fi
+    echo "$T"
+    python3 "$SOURCE" < "$T"; shift
   done
+else
+  echo "Not found: $SOURCE"
+  echo "Remember to include file extension."
 fi

@@ -1,269 +1,207 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-#define int long long
-#define ll long long
-#define double long double
+using ll = long long;
+using ull = unsigned long long;
+using db = long double;
+using str = string;
 
-#define fore(i,a) for(auto &i : a)
-#define rep_4(i,a,b,d) for(int i=(a)-((a)>(b));i!=(b)-((a)>(a));((a)<(b)?i+=d:i-=d))
-#define rep_3(i,a,b) rep_4(i,a,b,1)
-#define rep_X(x,i,a,b,d,F,...) F
-#define rep(a...) rep_X(,a,rep_4(a),rep_3(a),rep_2(a))
+using pi = pair<int,int>;
+using pl = pair<ll,ll>;
+using pd = pair<db,db>;
+using vi = vector<int>;
+using vb = vector<bool>;
+using vl = vector<ll>;
+using vd = vector<db>;
+using vc = vector<char>;
+using vs = vector<str>;
+using vpi = vector<pi>;
+using vpl = vector<pl>;
+using vpd = vector<pd>;
 
+template<typename C>
+struct is_iterable
+{
+    typedef long false_type;
+    typedef char true_type;
+    template<class T> static false_type check(...);
+    template<class T> static true_type  check(int, typename T::const_iterator = C().end());
+    enum { value = sizeof(check<C>(0)) == sizeof(true_type) };
+};
+template <typename T, typename S>
+struct is_string
+{
+    static const bool value = false;
+};
+template <class T, class Traits, class Alloc>
+struct is_string<T, std::basic_string<T, Traits, Alloc>>
+{
+    static const bool value = true;
+};
+
+#define fact_sieve
+#define prime_sieve
+#define divisor_sieve
+#define phi_sieve
+
+#define tcT template<class T
+#define tcTU tcT, class U
+#define tcTUU tcT, class ...U
+#define tcitT template<class T, typename = typename enable_if<is_iterable<T>::value && !is_string<char, T>::value>::type
+
+tcT> using v = vector<T>;
+tcT, size_t SZ> using ar = array<T,SZ>;
+tcTU> using pr = pair<T,U>;
+tcTU> using umap = unordered_map<T,U>;
+tcTU> using mmap = multimap<T,U>;
+tcTU> using ummap = unordered_multimap<T,U>;
+tcT> using uset = unordered_set<T>;
+tcT> using mset = multiset<T>;
+tcT> using umset = unordered_multiset<T>;
+
+#define mp make_pair
 #define fi first
 #define se second
+
+#define sz(x) int((x).size())
+#define bg(x) begin(x)
+#define all(x) bg(x), end(x)
+#define rall(x) rbegin(x), rend(x)
+#define sor(x) sort(all(x))
+#define rsz resize
+#define ins insert
+#define ft front
+#define bk back
 #define pub push_back
-#define emb emplace_back
-#define puf push_front
-#define emf emplace_front
 #define pob pop_back
-#define pof pop_front
-#define sz(c) (int)c.size()
+#define eb emplace_back
+#define pf push_front
+#define lb lower_bound
+#define ub upper_bound
+tcT> int lwb(v<T>& a, const T& b) { return int(lb(all(a),b)-bg(a)); }
+tcT> int upb(v<T>& a, const T& b) { return int(ub(all(a),b)-bg(a)); }
 
-template<class T>
-ostream& operator<<(ostream& os, vector<T>& v) {
-    fore(i, v) os << i << " ";
-    return os;
+#define rep(i,a,b) for (int i = (a); i < (b); ++i)
+#define fore(a,x) for (auto& a: x)
+
+tcTU> ostream& operator<<(ostream& s, pr<T, U>& p) {
+    s << "{" << p.fi << ", " << p.se << "}"; return s;
+}
+tcitT> ostream& operator<<(ostream& s, T& ds) {
+    auto it = bg(ds); s << "{";
+    for (; next(it) != end(ds); it++) {
+        s << *it << ", ";
+    }
+    if (it != end(ds)) s << *it << "}";
+    return s;
 }
 
-template<class T, class U>
-ostream& operator<<(ostream& os, pair<T, U>& p) {
-    os << p.fi << " " << p.se;
-    return os;
+tcTU> istream& operator>>(istream& s, pr<T, U>& p) {
+    s >> p.fi >> p.se; return s;
+}
+tcitT> istream& operator>>(istream& s, T& ds) {
+    for (auto it = bg(ds); it != end(ds); it++) {
+        s >> *it;
+    }
+    return s;
 }
 
-typedef pair<int, int> pii;
-typedef vector<bool> vb;
-typedef vector<char> vc;
-typedef vector<double> vd;
-typedef vector<long long> vll;
-typedef vector<int> vi;
-typedef vector<pii> vii;
-#define umap unordered_map
-#define uset unordered_set
-#define mmap multimap
-#define mset multiset
-#define ummap unordered_multimap
-#define umset unordered_multiset
-
-#define R(x) int x; cin >> x
-#define RS(x) string x; cin >> x
-#define RD(x) double x; cin >> x
-
-#define RV_1(v) fore(x, v) cin >> x
-#define RV_2(v, n) vi v(n); RV_1(v)
-#define RV_X(x, v, n, FUNC, ...) FUNC
-#define RV(args...) RV_X(,args,RV_2(args),RV_1(args))
-
-#define RNV_0() R(n); RV(v, n)
-#define RNV_2(n, v) R(n); RV(v, n)
-#define RNV_3(n, v1, v2) R(n); RV(v1, n); RV(v2, n)
-#define RNV_X(x, n, v1, v2, FUNC, ...) FUNC
-#define RNV(args...) RNV_X(,args,RNV_3(args),RNV_2(args),RNV_0(args))
-
-#define all(c) begin(c), end(c)
-#define rall(c) rbegin(c), rend(c)
-
-#define UMAX(a,b) a = max(a,b)
-#define UMIN(a,b) a = min(a,b)
-
-#define B(args...) [args]
-
-struct FlowEdge {
-    int v, u;
-    long long cap, flow = 0;
-    FlowEdge(int v, int u, long long cap) : v(v), u(u), cap(cap) {}
-};
-
-struct Dinic {
-    const ll flow_inf = 1e18;
-    vector<FlowEdge> edges;
-    vector<vi> adj;
-    int n, m = 0;
-    int s, t;
-    vi level, ptr;
-    queue<int> q;
-
-    Dinic(int n, int s, int t) : n(n), s(s), t(t) {
-        adj.resize(n);
-        level.resize(n);
-        ptr.resize(n);
+tcTU> T fstTrue(T lo, T hi, U f) {
+    hi ++; assert(lo <= hi); // assuming f is increasing
+    while (lo < hi) { // find first index such that f is true
+        T mid = lo+(hi-lo)/2;
+        f(mid) ? hi = mid : lo = mid+1;
     }
-
-    void add_edge(int v, int u, ll cap) {
-        edges.emb(v, u, cap);
-        edges.emb(u, v, 0);
-        adj[v].pub(m);
-        adj[u].pub(m + 1);
-        m += 2;
+    return lo;
+}
+tcTU> T lstTrue(T lo, T hi, U f) {
+    lo --; assert(lo <= hi); // assuming f is decreasing
+    while (lo < hi) { // find first index such that f is true
+        T mid = lo+(hi-lo+1)/2;
+        f(mid) ? lo = mid : hi = mid-1;
     }
+    return lo;
+}
 
-    bool bfs() {
-        while (!q.empty()) {
-            int v = q.front();
-            q.pop();
-            for (int id : adj[v]) {
-                if (edges[id].cap - edges[id].flow < 1)
-                    continue;
-                if (level[edges[id].u] != -1)
-                    continue;
-                level[edges[id].u] = level[v] + 1;
-                q.push(edges[id].u);
-            }
-        }
-        return level[t] != -1;
+constexpr int pct(int x) { return __builtin_popcount(x); } // # of bits set
+constexpr int bits(int x) { return x == 0 ? 0 : 31-__builtin_clz(x); } // floor(log2(x))
+constexpr int p2(int x) { return 1<<x; }
+constexpr int msk2(int x) { return p2(x)-1; }
+
+ll cediv(ll a, ll b) { return a/b+((a^b)>0&&a%b); } // divide a by b rounded up
+ll fldiv(ll a, ll b) { return a/b-((a^b)<0&&a%b); } // divide a by b rounded down
+tcT> bool chmin(T& a, const T& b) { return b < a ? a = b, 1 : 0; }
+tcT> bool chmax(T& a, const T& b) { return a < b ? a = b, 1 : 0; }
+
+vl toBase(ll n, int b) { vl ans; while (n) { ans.pub(n%b); n /= b; }
+    reverse(all(ans)); return ans; }
+ll toDec(const vl& v, int b) { ll ans = 0;
+    fore(i,v) ans = b*ans + i; return ans; }
+
+tcT> void remDup(vector<T>& v) {
+    sort(all(v)); v.erase(unique(all(v)),end(v)); }
+tcT> map<T, int> lis(vector<T>& v) {
+    map<T, int> m;
+    rep(i, 0, sz(v)) {
+        if (auto it = m.lb(v[i]); it != m.end()) m.erase(it);
+        m[v[i]] = i;
     }
+    return m;
+}
 
-    ll dfs(int v, ll pushed) {
-        if (pushed == 0) return 0;
-        if (v == t) return pushed;
-        for (int& cid = ptr[v]; cid < (int)adj[v].size(); cid++) {
-            int id = adj[v][cid];
-            int u = edges[id].u;
-            if (level[v] + 1 != level[u] || edges[id].cap - edges[id].flow < 1)
-                continue;
-            auto tr = dfs(u, min(pushed, edges[id].cap - edges[id].flow));
-            if (tr == 0)
-                continue;
-            edges[id].flow += tr;
-            edges[id ^ 1].flow -= tr;
-            return tr;
-        }
-        return 0;
+ll euclid(ll a, ll b, ll &x, ll &y) {
+    if (!b) return x = 1, y = 0, a;
+    ll d = euclid(b, a % b, y, x);
+    return y -= a/b * x, d;
+}
+struct Mod {
+    ll v = 0;
+    static const ll mod = 1e9+7;
+    Mod(ll v) : v(v) {} Mod() {}
+    Mod operator+(Mod b) const { return (v + b.v) % mod; }
+    Mod operator-(Mod b) const { return (v - b.v + mod) % mod; }
+    Mod operator*(Mod b) const { return (v * b.v) % mod; }
+    Mod operator/(Mod b) const { return *this * b.inv(); }
+    Mod inv() const {
+        ll x, y, g = euclid(v, mod, x, y);
+        assert(g == 1); return (x + mod) % mod;
     }
-
-    ll flow() {
-        ll f = 0;
-        while (true) {
-            fill(level.begin(), level.end(), -1);
-            level[s] = 0;
-            q.push(s);
-            if (!bfs())
-                break;
-            fill(ptr.begin(), ptr.end(), 0);
-            while (auto pushed = dfs(s, flow_inf)) {
-                f += pushed;
-            }
-        }
-        return f;
+    Mod operator^(ll e) {
+        if (!e) return 1;
+        Mod r = *this ^ (e / 2); r = r * r;
+        return e&1 ? *this * r : r;
     }
 };
 
-struct SegTree {
-    const static int N = 2e5;  // limit for array size
-    int n;  // array size
-    vll t;
+Mod operator ""_m(ull a) { return {(ll)a}; }
 
-    SegTree(int _n, const vi& _t) : n(_n) {
-        t.resize(2*n);
-        rep(i,n,2*n) t[i] = _t[i-n];
-    }
+//const int FACT_N = 100000; Mod fact[FACT_N];
+//#define fact_sieve fact[0]=1_m; rep(i,1,FACT_N) fact[i] = fact[i-1]*i;
+//Mod binom(int n, int k) { return fact[n]*(fact[k]*fact[n-k]).inv(); }
 
-    void build() {
-        for (int i = n - 1; i > 0; --i) t[i] = max(t[i<<1], t[i<<1|1]);
-    }
+//const int PRIME_N = 100000; vi primes; vb is_prime;
+//#define prime_sieve is_prime.resize(PRIME_N+1, true); is_prime[0] = is_prime[1] = false;\
+//rep(i,2,PRIME_N+1) if(is_prime[i]) { primes.pub(i); for(int j = i+i; j <= PRIME_N; j+=i) is_prime[j] = false; }
 
-    void modify(int p, ll val) {
-        for (t[p += n] = val; p > 1; p >>= 1) t[p>>1] = max(t[p], t[p^1]);
-    }
+//const int DIVISOR_N = 100001; vi divisors(DIVISOR_N);
+//#define divisor_sieve rep(i,1,DIVISOR_N) for(int j = i; j < DIVISOR_N; j+=i) divisors[j]++;
 
-    ll query(int l, int r) {
-        ll res = 0;
-        for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
-            if (l&1) UMAX(res, t[l++]);
-            if (r&1) UMAX(res, t[--r]);
-        }
-        return res;
-    }
-};
-
-struct DSU {
-    vi v; explicit DSU(int n) : v(n, -1) {}
-    int get(int x) { return v[x] < 0 ? x : v[x] = get(v[x]); }
-    bool same(int x, int y) { return get(x) == get(y); }
-    bool unite(int x, int y) {
-        x = get(x), y = get(y);
-        if (x == y) return false;
-        if (v[x] < v[y]) swap(x, y);
-        v[y] += v[x]; v[x] = y;
-        return true;
-    }
-};
-
-void sieve(int N, vi& primes) {
-    primes.clear();
-    vb isp(N+1,true);
-    rep(i,2,N+1) {
-        if(isp[i]) {
-            primes.pub(i);
-            for(ll j = 1LL*i*i; j < N+1; j+=i)
-                isp[j] = false;
-        }
-    }
-}
-
-ll power(ll x, ll y, ll p) {
-    ll res = 1;
-    x %= p;
-
-    while (y) {
-        if (y & 1) res = (res * x) % p;
-        x = (x * x) % p;
-        y >>= 1;
-    }
-    return res;
-}
-
-vi toBase(ll n, int b) {
-    vi ans;
-    while (n) {
-        ans.pub(n%b);
-        n /= b;
-    }
-    reverse(all(ans));
-    return ans;
-}
-
-ll toDec(const vi& v, int b) {
-    ll ans = 0;
-    fore(i,v) ans = b*ans + i;
-    return ans;
-}
-
-template<typename T>
-T b_search(T l, T r, const function<bool(T)>& f) {
-    while (l < r) {
-        T m = l+(r-l)/2;
-        if (f(m))
-            r = m;
-        else
-            l = m+1;
-    }
-    return l;
-}
-
-template <typename T>
-T find_first_false(T l, T r, const function<bool(T)>& f) {
-    if (l > r) return r + 1;
-    ++r;
-    T w = T(1) << __lg(r - l);
-    --l;
-    if (f(l + w)) l = r - w;
-    for (w >>= 1; w >= T(1); w >>= 1)
-        if (f(l + w)) l += w;
-    return l + 1;
-}
+//vi phi;
+//#define phi_sieve phi.resize(PRIME_N+1); rep(i,1,PRIME_N+1) phi[i] = i;\
+//rep(i,2,PRIME_N+1) if(is_prime[i]) for(int j = i; j <= PRIME_N; j+=i) phi[j] -= phi[j]/i;
 
 void solve() {
-    RNV();
+
 }
 
 int32_t main() {
     cin.tie(nullptr); cout.tie(nullptr);
     ios_base::sync_with_stdio(false);
 
-    int t; cin >> t;
-    while (t--) solve();
+    fact_sieve; prime_sieve; divisor_sieve; phi_sieve;
+
+    int t; cin >> t; while (t--)
+    solve();
+    // cout << solve() << "\n";
+    // cout << (solve() ? "YES" : "NO") << "\n";
 }
