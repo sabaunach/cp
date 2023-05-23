@@ -84,61 +84,53 @@ struct DSU {
     }
 };
 
-vector<map<int, ll>> adj_m;
-map<pair<int, int>, ll> extra_edges;
-vector<bool> vis;
-void dfs(int v, int par, set<int>& st, DSU& dsu) {
-	if (vis[v]) return;
-	if (st.count(v)) {
-		extra_edges[{v, par}] = adj_m[v][par];
-		return;
-	}
-	if (par != -1) dsu.unite(v, par);
-	st.insert(v);
-	for(auto&[u,w]: adj_m[v]) {
-		if (u == par) continue;
-		if (extra_edges.count({u,v}) || extra_edges.count({v,u})) continue;
-		dfs(u, v, st, dsu);
-	}
-	vis[v] = true;
-}
-
 int main() {
     cin.tie(nullptr); cout.tie(nullptr);
     ios_base::sync_with_stdio(false);
 
 	cerr << "reading input" << endl;
 	int n; cin >> n;
-	adj_m.resize(n+1);
+	vector<map<int, ll>> adj_m(n+1);
+	auto update_edge = [] (vector<map<int, ll>> adj, int a, int b, ll w) {
+		if (adj[a][b])
+			adj[a][b] = adj[b][a] = min(adj[a][b], w);
+		else adj[a][b] = adj[b][a] = w;
+	};
 	rep(i,1,n+1) {
 		int j; ll w; cin >> j >> w;
-		if (adj_m[i][j]) {
-			chmin(adj_m[i][j], w);
-			chmin(adj_m[j][i], w);
-		} else {
-			adj_m[i][j] = adj_m[j][i] = w;
-		}
+		update_edge(adj_m, i, j, w);
 	}
 	int l; cin >> l;
 	rep(t,0,l) {
 		int i, j; ll w; cin >> i >> j >> w;
-		if (adj_m[i][j]) {
-			chmin(adj_m[i][j], w);
-			chmin(adj_m[j][i], w);
-		} else {
-			adj_m[i][j] = adj_m[j][i] = w;
-		}
+		update_edge(adj_m, i, j, w);
 	}
 
-	DSU dsu(n+1);
-	vis.resize(n+1);
 	vector<vpil> adj_t(n+1);
 	vector<vector<tuple<int, int, ll>>> component_bridges(n+1);
+	map<pair<int, int>, ll> extra_edges;
+	vector<bool> vis1(n+1), vis2(n+1);
+	DSU dsu(n+1);
+	set<int> st;
+	function<void(int, int)> dfs1 = [&] (int v, int par) {
+		if (vis1[v]) return;
+		if (st.count(v)) {
+			extra_edges[{v, par}] = adj_m[v][par];
+			return;
+		}
+		if (par != -1) dsu.unite(v, par);
+		st.insert(v);
+		for(auto&[u,w]: adj_m[v]) {
+			if (u == par) continue;
+			if (extra_edges.count({u,v}) || extra_edges.count({v,u})) continue;
+			dfs1(u, v);
+		}
+		vis1[v] = true;
+	};
 
-	vector<bool> vis(n+1);
 	function<void(int, int)> dfs2 = [&] (int v, int par) {
-		if (vis[v]) return;
-		vis[v] = true;
+		if (vis2[v]) return;
+		vis2[v] = true;
 		for (auto&[u, w]: adj_m[v]) {
 			if (u == par) continue;
 			if (extra_edges.count({u,v}) || extra_edges.count({v,u})) continue;
@@ -149,30 +141,12 @@ int main() {
 
 	cerr << "dfs loop" << endl;
 	rep(i,1,n+1) {
-		set<int> st;
-		dfs(i, -1, st, dsu);
-
+		st.clear();
+		dfs1(i, -1);
 		dfs2(dsu.get(i), -1);
 		if (i == dsu.get(i))
-		adj_t[0].emplace_back(dsu.get(i), 0);
+			adj_t[0].emplace_back(dsu.get(i), 0);
 	}
-
-	function<void(int, int, set<int>&)> dfs3 = [&] (int v, int par, set<int>& st) {
-		assert(st.insert(v).se);
-		for (auto&[u, w]: adj_t[v]) {
-			if (u == par) continue;
-			dfs3(u, v, st);
-		}
-	};
-
-	// rep(i,0,n+1) {
-	// 	cerr << i << ": ";
-	// 	fore(x, adj_t[i]) cerr << x.fi << " ";
-	// 	cerr << endl;
-	// }
-
-	// set<int> sanity;
-	// dfs3(0, -1, sanity);
 
 	cerr << "constructing lca" << endl;
 	auto lca = LCA(adj_t);
