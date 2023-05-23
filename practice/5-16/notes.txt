@@ -1,0 +1,24 @@
+n numbers
+decide if there is a triple of points
+s.t. x + y = z
+
+simplest meet-in-the-middle sol (on n^2)
+
+sum of all pair of numbers = n^2
+sort sums
+sort nums and in binary search compare to see if there is anything summing up to that pair of nums
+
+
+backtracking may work
+pruning may work
+but MITM may be the cleanest / fastest to impl
+
+
+
+
+general idea
+split dataset in half
+solve with exponential time
+binary search: compare objects in left set w/ objects in right set
+& see if gives sol
+

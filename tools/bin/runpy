@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 "$(basename "$1")".py < "$(basename "$1")".in
+python3 "$(basename "$1")".py < "$1"
