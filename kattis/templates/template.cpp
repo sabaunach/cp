@@ -37,24 +37,34 @@ tcTU> T lstTrue(T lo, T hi, U f) {
     return lo;
 }
 
-const int PRIME_N = 100000;
-vi primes; bool is_prime[PRIME_N + 1];
-void prime_sieve() {
-    memset(is_prime, 1, sizeof(is_prime));
-    is_prime[0] = is_prime[1] = 0;
-    rep(i,2,PRIME_N + 1) if (is_prime[i]) {
-        primes.push_back(i); 
-        for(int j = i+i; j <= PRIME_N; j+=i) 
-            is_prime[j] = false;
-    }
+tcTU> ostream& operator<<(ostream& s, pr<T, U>& p) {
+    s << "{" << p.fi << ", " << p.se << "}"; return s;
 }
-int phi[PRIME_N + 1];
-void phi_sieve() {
-    rep(i,1,PRIME_N + 1) phi[i] = i;
-    rep(i,2,PRIME_N + 1) if(is_prime[i])
-        for(int j = i; j <= PRIME_N; j+=i)
-            phi[j] -= phi[j]/i;
+tcTU> istream& operator>>(istream& s, pr<T, U>& p) {
+    s >> p.fi >> p.se; return s;
 }
+#define zz(t, v, c) c> ostream& operator<<(ostream& s, t<v>& d) {\
+    fore(x, d) s << x << " "; return s; }\
+    c> istream& operator>>(istream& s, t<v>& d) {\
+    fore(x, d) s >> x; return s; }
+#define TU T, U
+zz(v, T, tcT) zz(list, T, tcT)
+zz(map, TU, tcTU) zz(unordered_map, TU, tcTU)
+zz(set, T, tcT) zz(unordered_set, T, tcT)
+
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+tcT> using Ordered_multiset = tree<T, null_type,
+ less_equal<T>, rb_tree_tag,
+ tree_order_statistics_node_update>;
+tcT> using Ordered_set = tree<T, null_type,
+ less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+tcT> using Trie = trie<T, null_type, 
+trie_string_access_traits<>, pat_trie_tag,
+trie_prefix_search_node_update>;
+// #include <ext/pb_ds/priority_queue.hpp> // Pairing heap
+// __gnu_pbds::priority_queue<int> pq;
 
 int main() {
     cin.tie(0)->sync_with_stdio(0);
